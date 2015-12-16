@@ -7,7 +7,7 @@ This is a WIP. This project demonstrates the basics of a neural network.  It fea
 This is a ruby project.
 
 ```sh 
-irb -r ./app.rb
+$ irb -r ./app.rb
 ```
 Then in irb:
 ```ruby
@@ -22,7 +22,7 @@ Input and output layers are first and last of array respectively.
 network = Network.new({size: [1,2,1]})
 network.to_s
 ```
-prints to $stdout
+will print out
 
 ```text
 Network
@@ -46,7 +46,7 @@ Network
  
  Layers can be of type Input, Hidden and Output.  The layer object_id is included in the to_s output.
  
-### Network Input
+### Network Feeding/Input
 
 You send input through your network by feeding it. When you feed the network it takes your input and passes it to the input layer, hidden layer and returns the output layer.
 
@@ -80,7 +80,14 @@ returns
 
 # Running the tests
 
-You can run the test suite with `rspec` or `rspec spec/somefile.rb`.
+You can run the test suite with:
+```
+$ rspec
+```
+or for specific files 
+```
+$ rspec spec/some-file.rb spec/some-other-file.rb
+```
 
 ### Automatically run your tests
 
