@@ -78,6 +78,14 @@ returns
 ]
 ```
 
+# Running the tests
+
+You can run the test suite with `rspec` or `rspec spec/somefile.rb`.
+
+### Automatically run your tests
+
+Using [guard](https://github.com/guard/guard) you can automatically run individual test files as you make changes.  Just run `guard` from the command-line and it will monitor your .rb files for changes and run tests that match in filename.  If you don't have guard install it with `gem install guard`.
+
 # Misc
 
 To reload any changes you make while in irb, you can simply call `load [filename]`.
