@@ -1,3 +1,5 @@
+require './layer.rb'
+
 class Network
 
   attr_accessor :layers
@@ -12,6 +14,10 @@ class Network
     size.each do |neuron_count|
       self.layers << Layer.new({neurons: neuron_count})
     end
+
+    # layer's default to type hidden
+    input_layer.type = :input
+    output_layer.type = :output
   end
 
   def connect
@@ -37,9 +43,17 @@ class Network
     output_layer.output
   end
 
+  # in case we want to see normal inspect, because we are going to override it below
+  alias_method :inspect_normal, :inspect
+
+  # now lets override inspect to a something better formatted
+  def inspect
+    to_s
+  end
+
   def to_s
-    "Network" + 
-    layers.join("\n ").to_s 
+    puts "Network" + 
+      layers.join("\n ").to_s 
   end
 
 end

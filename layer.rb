@@ -1,9 +1,11 @@
+require './neuron.rb'
+
 class Layer
 
   attr_accessor :type, :neurons
 
   def initialize(options={})
-    self.type = options[:type]
+    self.type = options[:type] ? options[:type].to_sym : :hidden
     self.neurons = []
     build_neurons(options[:neurons])
   end
@@ -40,7 +42,7 @@ class Layer
   end
 
   def to_s
-    "\nLayer #{object_id}\n" +
+    "\n #{self.type.capitalize} aaaLayer #{object_id}\n" +
     "  " + neurons.join("\n  ").to_s
   end
 
