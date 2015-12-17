@@ -2,17 +2,23 @@ require './layer.rb'
 
 class Network
 
-  attr_accessor :layers
+  attr_accessor :layers, :options
 
   def initialize(options={})
     self.layers = []
-    self.build_layers(options[:size]) if options[:size]
+    self.options = {}
+
+    self.options.merge! options
+    build_layers
     connect
   end
 
-  def build_layers(size)
-    size.each do |neuron_count|
-      self.layers << Layer.new({neurons: neuron_count})
+  def build_layers
+
+    self.options[:size].each do |neuron_count|
+      opts = {neurons: neuron_count}
+      opts[:force_weight] = self.options[:force_weight] if self.options[:force_weight]
+      self.layers << Layer.new(opts)
     end
 
     # layer's default to type hidden

@@ -22,6 +22,16 @@ describe Network do
       expect(n.layers[1].neurons[0].outgoing.count).to eq 1
       # probably sufficient
     end
+
+    it "initializes a network with layers and connects them using a forced weight" do
+      layer_sizes = [1, 2]
+      n = Network.new({size: layer_sizes, force_weight: 0.12})
+      
+      expect(n.layers.count).to eq 2
+      expect(n.layers[0].neurons[0].outgoing[0].weight).to eq 0.12
+      expect(n.layers[1].neurons[0].incoming[0].weight).to eq 0.12
+      expect(n.layers[1].neurons[1].incoming[0].weight).to eq 0.12
+    end
   end
 
   it "feeds input array through the a layer and returns output array"  do

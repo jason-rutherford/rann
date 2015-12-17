@@ -37,12 +37,11 @@ describe Layer do
   end
 
   it 'builds a number of neurons into itself' do
-    l = Layer.new({type: :input})
-    l.build_neurons(10)
+    l = Layer.new({type: :input, neurons: 10})
     expect(l.neurons.count).to eq 10
   end
 
-  it 'connects each neuron in layer1 every neuron in layer2' do
+  it 'connects each neuron in layer1 to every neuron in layer2' do
     Neuron.reset_counter
     l1 = Layer.new({type: :input, neurons: 3})
     l2 = Layer.new({type: :input, neurons: 3})
@@ -56,6 +55,21 @@ describe Layer do
     expect(l2.neurons[1].incoming.count).to eq 3
     expect(l2.neurons[2].incoming.count).to eq 3
   end
+
+
+  it 'connects each neuron in layer1 to every neuron in layer2 with specific connection weights' do
+    Neuron.reset_counter
+    l1 = Layer.new({type: :input, neurons: 2, force_weight: 0.3})
+    l2 = Layer.new({type: :input, neurons: 2})
+    l1.connect(l2)
+    
+    expect(l1.neurons[0].outgoing[0].weight).to eq 0.3
+    expect(l1.neurons[1].outgoing[1].weight).to eq 0.3
+   
+    expect(l2.neurons[0].incoming[0].weight).to eq 0.3
+    expect(l2.neurons[1].incoming[1].weight).to eq 0.3
+  end
+
 
   it 'feeds with input array and returns output array' do
     input = [1,2,3]

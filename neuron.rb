@@ -2,10 +2,11 @@ require './connection.rb'
 
 class Neuron
   
-  attr_accessor :id, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming
+  attr_accessor :id, :options, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming
   @@count = 0
 
-  def initialize()
+  def initialize(options={})
+    self.options = {}
     self.input = nil
     self.output = nil
     self.fire_threshold = 0.5
@@ -13,6 +14,8 @@ class Neuron
     self.incoming = []
     self.outgoing = []
     self.id = @@count += 1
+
+    self.options.merge! options
   end
 
   def activate(input=sum_connections)
@@ -47,8 +50,8 @@ class Neuron
 
   # convenience method so you can set the weight
   def connect(*targets)
-    targets.flatten.each do |target|   
-      connection = Connection.new(self, target)
+    targets.flatten.each do |target|       
+      connection = Connection.new(self, target, self.options[:force_weight])
       self.outgoing << connection
       # for now we only handle connections in one direction
       target.incoming << connection
@@ -68,7 +71,7 @@ class Neuron
   end
 
   def to_s
-    "Neuron #{id} (#{self.output})" + "#{"*" if self.fired?}" +
+    "Neuron #{id} (#{self.output})" + "#{" *" if self.fired?}" +
     "\n  " + outgoing.join("\n  ").to_s
   end
 

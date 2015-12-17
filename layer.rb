@@ -2,19 +2,23 @@ require './neuron.rb'
 
 class Layer
 
-  attr_accessor :type, :neurons
+  attr_accessor :type, :neurons, :options
 
   def initialize(options={})
+    self.options = options
     self.type = options[:type] ? options[:type].to_sym : :hidden
     self.neurons = []
-    build_neurons(options[:neurons])
+    build_neurons
   end
 
-  def build_neurons(neurons_or_count)
+  def build_neurons
+    neurons_or_count = self.options[:neurons]
     case neurons_or_count
     when Integer
       neurons_or_count.times do
-        self.neurons << Neuron.new
+        opts = {}
+        opts.merge!({force_weight: self.options[:force_weight]}) if self.options[:force_weight]
+        self.neurons << Neuron.new(opts)
       end
     when Array
       raise StandardError.new('Layer neurons are not all of Neuron class') if neurons_or_count.collect { |n| !n.is_a?(Neuron)}.any?
