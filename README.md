@@ -70,7 +70,7 @@ The `feed()` method will return the network output.  Alternatively, you can get 
 network.output
 ```
 
-returns
+Just like `feed()`, this returns an array of output layer neuron output values.
 
 ```
 [
@@ -80,7 +80,7 @@ returns
 
 # Running the tests
 
-You can run the test suite with:
+You can run the full test suite with:
 ```
 $ rspec
 ```
@@ -95,7 +95,8 @@ Using [guard](https://github.com/guard/guard) you can automatically run individu
 
 # Misc
 
-To reload any changes you make while in irb, you can simply call `load [filename]`.
+### Reloading Changes in irb
+To reload any changes you make while in irb, you can simply call `reload!`.  This method is in `app.rb` and it searches the project path for ruby files, but it will filter some out, like any in your spec directory.
 
 # TODO
 
