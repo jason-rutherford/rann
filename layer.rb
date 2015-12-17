@@ -42,7 +42,7 @@ class Layer
   end
 
   def to_s
-    "\n #{self.type.capitalize} aaaLayer #{object_id}\n" +
+    "\n #{self.type.capitalize} Layer #{object_id}\n" +
     "  " + neurons.join("\n  ").to_s
   end
 
