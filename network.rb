@@ -9,6 +9,8 @@ class Network
     self.options = {}
 
     self.options.merge! options
+    self.options[:size] = [1,2,1] if options[:size].nil?
+
     build_layers
     connect
   end
