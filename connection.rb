@@ -2,10 +2,10 @@
 class Connection
   attr_accessor :source, :target, :weight
 
-  def initialize(source, target, weight = default_weight)
+  def initialize(source, target, weight = nil)
     self.source = source
     self.target = target
-    self.weight = weight
+    self.weight = weight || default_weight
   end
 
   def default_weight
@@ -17,6 +17,6 @@ class Connection
   end
 
   def to_s
-    "  #{weight} x Neuron #{target.id}"
+    "  Neuron #{target.id} x #{weight.round(4)}"
   end
 end
