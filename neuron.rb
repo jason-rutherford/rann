@@ -4,6 +4,7 @@ class Neuron
   
   attr_accessor :id, :options, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming
   @@count = 0
+  @@report_with = nil
 
   def initialize(options={})
     self.options = {}
@@ -50,7 +51,7 @@ class Neuron
 
   # convenience method so you can set the weight
   def connect(*targets)
-    targets.flatten.each do |target|       
+    targets.flatten.each do |target|
       connection = Connection.new(self, target, self.options[:force_weight])
       self.outgoing << connection
       # for now we only handle connections in one direction
@@ -70,9 +71,23 @@ class Neuron
     outgoing + incoming
   end
 
+  def inspect
+    to_s
+  end
+
   def to_s
-    "Neuron #{id} (#{self.output})" + "#{" *" if self.fired?}" +
+    s = "Neuron #{id} (IN: #{self.input || '__'} => OUT: #{self.output || '__'})" #+ "#{" *" if self.fired?}"
+    s += report_connections if @@report_with == :connections
+    s
+  end
+
+  def report_connections
     "\n  " + outgoing.join("\n  ").to_s
+  end
+
+  # type can be nil for just neuron IO, or :connections to include outgoing connections
+  def self.report_with(type=nil)
+    @@report_with = type.to_sym
   end
 
   def self.reset_counter
