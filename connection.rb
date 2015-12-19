@@ -17,6 +17,6 @@ class Connection
   end
 
   def to_s
-    "  Neuron #{target.id} x #{weight.round(4)}"
+    " connection to Neuron #{target.id} x #{weight.round(4)}"
   end
 end

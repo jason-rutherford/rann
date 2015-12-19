@@ -60,7 +60,6 @@ class Network
   end
 
   def to_s
-    puts "Network" 
-      + layers.join("\n ").to_s
+    puts "Network" + layers.join("\n ").to_s
   end
 end

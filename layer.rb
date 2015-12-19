@@ -39,7 +39,7 @@ class Layer
     neurons + [bias].compact
   end
 
-  def activate(inputs)
+  def activate(inputs)    
     feed(inputs)
   end
 
@@ -57,6 +57,13 @@ class Layer
 
   def output
     self.neurons.collect { |n| n.output }
+  end
+
+  # in case we want to see normal inspect, because we are going to override it below
+  (alias_method :inspect_normal, :inspect) unless $reloading
+
+  def inspect
+    self.to_s
   end
 
   def to_s
