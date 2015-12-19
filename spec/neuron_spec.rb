@@ -15,6 +15,15 @@ describe Neuron do
     expect(n.output).to eq(0.7310585786300049)
   end
 
+  it 'will default to and output 1 when it is a bias neuron' do
+    n = Neuron.new(is_bias: true)
+    expect(n.output).to eq 1
+
+    output = n.activate(3)
+    expect(output).to be_an_instance_of Fixnum
+    expect(n.output).to eq(1)
+  end
+
   it 'tracks and resets the current neuron count' do
     Neuron.reset_counter
     expect(Neuron.count).to eq 0

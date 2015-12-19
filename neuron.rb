@@ -2,29 +2,41 @@ require './connection.rb'
 
 class Neuron
   
-  attr_accessor :id, :options, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming
+  attr_accessor :id, :options, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming, :is_bias
   @@count = 0
   @@report_with = nil
 
   def initialize(options={})
     self.options = {}
-    self.input = nil
-    self.output = nil
+    self.input  = options[:input] || nil
+    self.output = options[:output] || nil
+    self.is_bias = options[:is_bias] && self.output = 1 || false
     self.fire_threshold = 0.5
     self.fired = false
-    self.incoming = []
-    self.outgoing = []
     self.id = @@count += 1
 
+    # connections
+    self.incoming = []
+    self.outgoing = []
+
     self.options.merge! options
+  end
+
+  def is_bias?
+    self.is_bias
   end
 
   def activate(input=sum_connections)
     self.input = input
     raise "no input value was provided" if self.input.nil?
-    self.output = activation_fn(self.input)
-    if self.output > self.fire_threshold
-      fire
+
+    if self.is_bias
+      self.output = 1
+    else
+      self.output = activation_fn(self.input)
+      if self.output > self.fire_threshold
+	fire
+      end
     end
     self.output
   end

@@ -12,14 +12,23 @@ describe Network do
       expect(n.layers[1].neurons.count).to eq 4
       expect(n.layers[2].neurons.count).to eq 1
 
-      expect(n.layers[0].neurons[0].connections.count).to eq 4
-      expect(n.layers[0].neurons[1].connections.count).to eq 4
-      
+      # connected layers should have a bias neuron
+      expect(n.layers[0].bias).to be_an_instance_of Neuron
+
+      # input layer
+      expect(n.layers[0].neurons[0].incoming.count).to eq 0
+      expect(n.layers[0].neurons[0].outgoing.count).to eq 4
+
       expect(n.layers[0].neurons[1].incoming.count).to eq 0
       expect(n.layers[0].neurons[1].outgoing.count).to eq 4
 
-      expect(n.layers[1].neurons[0].incoming.count).to eq 2
+      # hidden layer
+      expect(n.layers[1].neurons[0].incoming.count).to eq 3 # includes bias
       expect(n.layers[1].neurons[0].outgoing.count).to eq 1
+
+      # output layer
+      expect(n.layers[2].neurons[0].incoming.count).to eq 5 # includes bias
+      expect(n.layers[2].neurons[0].outgoing.count).to eq 0
       # probably sufficient
     end
 

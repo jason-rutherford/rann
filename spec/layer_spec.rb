@@ -41,21 +41,39 @@ describe Layer do
     expect(l.neurons.count).to eq 10
   end
 
+  it 'adds a bias neuron upon connecting layers' do
+    Neuron.reset_counter
+    l1 = Layer.new({type: :input, neurons: 1})
+    l2 = Layer.new({type: :input, neurons: 1})
+    l1.connect(l2)
+
+    expect(l1.bias).to be_instance_of Neuron
+    expect(l1.bias.outgoing.count).to eq 1
+
+    expect(l1.neurons_and_bias.count).to eq 2
+    expect(l2.neurons_and_bias.count).to eq 1
+  end
+
   it 'connects each neuron in layer1 to every neuron in layer2' do
     Neuron.reset_counter
     l1 = Layer.new({type: :input, neurons: 3})
     l2 = Layer.new({type: :input, neurons: 3})
     l1.connect(l2)
+
+    # the layer bias neuron
+    expect(l1.bias).to be_instance_of Neuron
+    expect(l1.bias.outgoing.count).to eq 3
     
+    # layer 1 neurons, not with bias
     expect(l1.neurons[0].outgoing.count).to eq 3
     expect(l1.neurons[1].outgoing.count).to eq 3
     expect(l1.neurons[2].outgoing.count).to eq 3
 
-    expect(l2.neurons[0].incoming.count).to eq 3
-    expect(l2.neurons[1].incoming.count).to eq 3
-    expect(l2.neurons[2].incoming.count).to eq 3
+    # layer 2 neurons, includes bias connection
+    expect(l2.neurons[0].incoming.count).to eq 4
+    expect(l2.neurons[1].incoming.count).to eq 4
+    expect(l2.neurons[2].incoming.count).to eq 4
   end
-
 
   it 'connects each neuron in layer1 to every neuron in layer2 with specific connection weights' do
     Neuron.reset_counter

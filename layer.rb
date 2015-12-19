@@ -2,12 +2,13 @@ require './neuron.rb'
 
 class Layer
 
-  attr_accessor :type, :neurons, :options
+  attr_accessor :type, :neurons, :bias, :options
 
   def initialize(options={})
     self.options = options
     self.type = options[:type] ? options[:type].to_sym : :hidden
     self.neurons = []
+    self.bias = nil
     build_neurons
   end
 
@@ -28,9 +29,18 @@ class Layer
 
   # connects this layer neurons (sources) to another layer neurons (targets)
   def connect(target_layer)
-    neurons.each do |n|
+    add_bias
+    neurons_and_bias.each do |n|
       n.connect(target_layer.neurons)
     end
+  end
+
+  def neurons_and_bias
+    neurons + [bias].compact
+  end
+
+  def activate(inputs)
+    feed(inputs)
   end
 
   def feed(inputs)
@@ -39,6 +49,10 @@ class Layer
       outputs << neuron.activate(inputs[idx])
     end
     outputs
+  end
+
+  def add_bias
+    self.bias = Neuron.new(is_bias: true) if self.bias.nil?
   end
 
   def output
