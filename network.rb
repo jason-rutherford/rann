@@ -1,7 +1,7 @@
 require './layer.rb'
 
 class Network
-
+  
   attr_accessor :layers, :options
 
   def initialize(options={})
@@ -16,7 +16,7 @@ class Network
   end
 
   def build_layers
-
+    
     self.options[:size].each do |neuron_count|
       opts = {neurons: neuron_count}
       opts[:force_weight] = self.options[:force_weight] if self.options[:force_weight]
@@ -52,7 +52,7 @@ class Network
   end
 
   # in case we want to see normal inspect, because we are going to override it below
-  alias_method :inspect_normal, :inspect
+  (alias_method :inspect_normal, :inspect) unless $reloading
 
   # now lets override inspect to a something better formatted
   def inspect
@@ -60,8 +60,7 @@ class Network
   end
 
   def to_s
-    puts "Network" + 
-      layers.join("\n ").to_s 
+    puts "Network" 
+      + layers.join("\n ").to_s
   end
-
 end

@@ -71,6 +71,9 @@ class Neuron
     outgoing + incoming
   end
 
+  # in case we want to see normal inspect, because we are going to override it below
+  (alias_method :inspect_normal, :inspect) unless $reloading
+
   def inspect
     to_s
   end
