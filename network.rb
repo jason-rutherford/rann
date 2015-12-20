@@ -34,7 +34,7 @@ class Network
     end
   end
 
-  def feed(inputs)
+  def feed(*inputs)
     input_layer.feed(inputs)
     output_layer.output
   end

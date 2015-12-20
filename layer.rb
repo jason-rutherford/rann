@@ -43,10 +43,12 @@ class Layer
     feed(inputs)
   end
 
-  def feed(inputs)
+  # splat here lets you send an array or multple args
+  def feed(*inputs)
+    input_array = Array[inputs].flatten # force our splat arg to an Array
     outputs = []
-    neurons.each_with_index do |neuron, idx|
-      outputs << neuron.activate(inputs[idx])
+    neurons.each_with_index do |neuron, idx|      
+      outputs << neuron.activate(input_array[idx] || next)
     end
     outputs
   end
