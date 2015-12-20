@@ -20,6 +20,8 @@ class Neuron
     self.outgoing = []
 
     self.options.merge! options
+
+    @activation_fn_cache = {}
   end
 
   def is_bias?
@@ -35,7 +37,7 @@ class Neuron
     else
       self.output = activation_fn(self.input)
       if self.output > self.fire_threshold
-	fire
+        fire
       end
     end
     self.output
