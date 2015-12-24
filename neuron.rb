@@ -2,22 +2,25 @@ require './connection.rb'
 
 class Neuron
   
-  attr_accessor :id, :options, :input, :output, :weight, :fire_threshold, :fired, :outgoing, :incoming, :is_bias
+  attr_accessor :id, :options, :input, :output, :weight, :outgoing, :incoming, :is_bias, :delta, :error, :learning_rate
   @@count = 0
   @@report_with = nil
 
   def initialize(options={})
     self.options = {}
-    self.input  = options[:input] || nil
-    self.output = options[:output] || nil
+    self.input  = options[:input] || 0
+    self.output = options[:output] || 0
     self.is_bias = options[:is_bias] && self.output = 1 || false
-    self.fire_threshold = 0.5
-    self.fired = false
     self.id = @@count += 1
 
     # connections
     self.incoming = []
     self.outgoing = []
+
+    # train
+    self.delta = nil
+    self.error = nil
+    self.learning_rate = 0.3
 
     self.options.merge! options
   end
@@ -26,17 +29,12 @@ class Neuron
     self.is_bias
   end
 
-  def activate(input=sum_connections)
-    self.input = input
-    raise "no input value was provided" if self.input.nil?
-
+  def activate(value=nil)
+    self.input = value || sum_connections
     if self.is_bias
       self.output = 1
     else
       self.output = activation_fn(self.input)
-      if self.output > self.fire_threshold
-	fire
-      end
     end
     self.output
   end
@@ -47,19 +45,40 @@ class Neuron
   end
 
   def sum_connections
-    incoming.inject(0) {|sum,c| sum + (c.source.output * c.weight)} if incoming.any?
+    incoming.inject(0) {|sum,c| sum + (c.source.output * c.weight)}
   end
 
-  def fire
-    self.fired = true
-    outgoing.each do |c|
-      c.target.activate(self.output)
+  #
+  # Train
+  #
+
+  def train(target_output=nil)
+    inputDerivative = activation_prime(self.input)
+    # if is_output or target_output not nil
+    if self.outgoing.empty?
+      self.error = target_output - self.output
+      self.delta = -self.error * inputDerivative
+    else
+      self.delta = outgoing.inject(0) { |sum, c| sum + (inputDerivative * c.weight * c.target.delta) }
     end
+
+    # update weights
+    outgoing.each do |connection|
+      gradient = self.output * connection.target.delta
+      connection.weight -= gradient * self.learning_rate
+    end
+
   end
 
-  def fired?
-    self.fired
+   # prime
+  def activation_prime(x)
+    val = 1 / (1 + Math.exp(-x))
+    val * (1 - val)
   end
+
+  #
+  # End Train
+  #
 
   # convenience method so you can set the weight
   def connect(*targets)
@@ -91,7 +110,7 @@ class Neuron
   end
 
   def to_s
-    s = "Neuron #{id} (IN: #{self.input || '__'} => OUT: #{self.output || '__'})" #+ "#{" *" if self.fired?}"
+    s = "#{"Bias " if self.is_bias}Neuron #{id} (IN: #{self.input || '__'} => OUT: #{self.output || '__'})"
     s += report_connections if @@report_with == :connections
     s
   end

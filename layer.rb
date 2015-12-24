@@ -39,22 +39,24 @@ class Layer
     neurons + [bias].compact
   end
 
-  def activate(inputs)    
-    feed(inputs)
-  end
-
-  # splat here lets you send an array or multple args
-  def feed(*inputs)
-    input_array = Array[inputs].flatten # force our splat arg to an Array
+  def activate(values=nil)
+    input_array = Array[values].flatten # force our splat arg to an Array
     outputs = []
-    neurons.each_with_index do |neuron, idx|      
-      outputs << neuron.activate(input_array[idx] || next)
+    neurons.each_with_index do |neuron, idx| 
+      outputs << neuron.activate(values && values[idx])
     end
+
+    if bias
+      bias.activate unless type == :output
+    end
+
     outputs
   end
 
   def add_bias
-    self.bias = Neuron.new(is_bias: true) if self.bias.nil?
+    opts = {is_bias: true}
+    opts.merge!({force_weight: self.options[:force_weight]}) if self.options[:force_weight]
+    self.bias = Neuron.new(opts) if self.bias.nil?
   end
 
   def output
@@ -70,7 +72,7 @@ class Layer
 
   def to_s
     "\n #{self.type.capitalize} Layer #{object_id}\n" +
-    "  " + neurons.join("\n  ").to_s
+    "  " + neurons_and_bias.join("\n  ").to_s
   end
 
 end

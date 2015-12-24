@@ -46,15 +46,15 @@ Network
  
  Layers can be of type Input, Hidden and Output.  The layer object_id is included in the to_s output.
  
-### Network Feeding/Input
+### Providing Network Input
 
-You send input through your network by feeding it. When you feed the network it takes your input and passes it to the input layer, hidden layer and returns the output layer.
+You send input through your network be sending date through the activate method. When you activate the network it takes your inputs and passes it to the input layer, hidden layer and returns the output layer.
 
 ```ruby
 network = Network.new({size: [1,2,1]})
-network.feed(1)
+network.activate([1])
 ```
-feed() returns an array of outputs which can be thought of as the output layer neuron output values.  The last line above returns:
+activate() returns an array of outputs which can be thought of as the output layer neuron output values.  The last line above returns:
 
 ```
 [
@@ -64,13 +64,13 @@ feed() returns an array of outputs which can be thought of as the output layer n
 
 ### Network Output
 
-The `feed()` method will return the network output.  Alternatively, you can get the current output layer via the `output()` method.
+The `activate()` method will return the network output.  Alternatively, you can get the current output layer via the `output()` method.
 
 ```ruby
 network.output
 ```
 
-Just like `feed()`, this returns an array of output layer neuron output values.
+Just like `activate()`, this returns an array of output layer neuron output values.
 
 ```
 [
