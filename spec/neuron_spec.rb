@@ -128,26 +128,5 @@ describe Neuron do
       output = n3.activate    
       expect(n3.input).to eq 3.0
     end
-
-    it 'activates connected (outgoing) neurons when output exceeds fire threshold' do
-      Neuron.reset_counter
-      n1 = Neuron.new
-      n2 = Neuron.new
-
-      # override threshold so it always fires
-      n1.fire_threshold = 0 
-      # connect_one() lets you set the weight, connect() does not
-      n1.connect_one(n2, 1)
-      
-      expect(n1.fired?).to be false          
-      expect(n1.output).to be nil
-      expect(n2.output).to be nil
-      
-      n1.activate(10)
-      
-      expect(n1.fired?).to be true
-      expect(n1.output).not_to be nil
-      expect(n2.output).not_to be nil
-    end
   end
 end

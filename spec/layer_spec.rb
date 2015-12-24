@@ -89,16 +89,16 @@ describe Layer do
   end
 
 
-  it 'feeds with input array and returns output array' do
+  it 'activates with input array and returns output array' do
     input = [1,2,3]
     l1 = Layer.new({type: :input, neurons: 1})
-    output = l1.feed(input)
+    output = l1.activate(input)
     expect(output).to be_instance_of Array
     expect(output.count).to eq 1
 
     input = [1,2,3]
     l1 = Layer.new({type: :input, neurons: 2})
-    output = l1.feed(input)
+    output = l1.activate(input)
     expect(output).to be_instance_of Array
     expect(output.count).to eq 2
     # should be sufficient
