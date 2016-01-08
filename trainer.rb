@@ -6,7 +6,7 @@ DATA = {
     { input: [1,1], output: [1] }
   ]
 }
-
+# This class handles network training.  Pass it a network and training data and call train.
 class Trainer
   attr_accessor :network, :data
   def initialize(network, data)

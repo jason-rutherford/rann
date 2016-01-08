@@ -6,12 +6,12 @@ class Network
   attr_accessor :layers, :options, :hidden_layers
 
   def initialize(options = {})
-    self.layers = []
-    self.hidden_layers = []
-    self.options = {}
+    @layers = []
+    @hidden_layers = []
+    @options = {}
 
-    self.options.merge! options
-    self.options[:size] = [1, 2, 1] if options[:size].nil?
+    @options.merge! options
+    @options[:size] = [1, 2, 1] if options[:size].nil?
 
     build_layers
     connect
@@ -71,6 +71,6 @@ class Network
     # layer's default to type hidden
     input_layer.type = :input
     output_layer.type = :output
-    self.hidden_layers = layers.slice(1, layers.size - 2)
+    @hidden_layers = layers.slice(1, layers.size - 2)
   end
 end

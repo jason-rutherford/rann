@@ -6,22 +6,22 @@ class Neuron
   @@report_with = nil
 
   def initialize(options = {})
-    self.options       = {}
-    self.input         = options[:input] || 0
-    self.output        = options[:output] || 0
-    self.bias          = options[:bias] && self.output = 1 || false
-    self.id            = @@count += 1
+    @options       = {}
+    @input         = options[:input] || 0
+    @output        = options[:output] || 0
+    @bias          = options[:bias] && @output = 1 || false
+    @id            = @@count += 1
 
     # connections
-    self.incoming      = []
-    self.outgoing      = []
+    @incoming      = []
+    @outgoing      = []
 
     # train
-    self.delta         = nil
-    self.learning_rate = 0.3
-    self.error         = 0
+    @delta         = nil
+    @learning_rate = 0.3
+    @error         = 0
 
-    self.options.merge! options
+    @options.merge! options
   end
 
   def bias?
@@ -29,7 +29,7 @@ class Neuron
   end
 
   def activate(value = nil)
-    self.input = value || sum_connections
+    @input = value || sum_connections
     if bias?
       self.output = 1
     else
@@ -58,9 +58,9 @@ class Neuron
 
   def calculate_delta(target_output)
     if outgoing.empty?
-      self.delta = output - target_output
+      @delta = output - target_output
     else
-      self.delta = outgoing.inject(0) { |sum, c| sum + (c.weight * c.target.delta) }
+      @delta = outgoing.inject(0) { |sum, c| sum + (c.weight * c.target.delta) }
     end
   end
 

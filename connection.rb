@@ -3,9 +3,9 @@ class Connection
   attr_accessor :source, :target, :weight
 
   def initialize(source, target, weight = nil)
-    self.source = source
-    self.target = target
-    self.weight = weight || default_weight
+    @source = source
+    @target = target
+    @weight = weight || default_weight
   end
 
   def default_weight
@@ -13,7 +13,7 @@ class Connection
   end
 
   def weight_by_factor(f)
-    self.weight *= f
+    @weight *= f
   end
 
   def to_s

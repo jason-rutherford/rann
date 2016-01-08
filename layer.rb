@@ -4,10 +4,10 @@ class Layer
   attr_accessor :type, :neurons, :bias, :options
 
   def initialize(options = {})
-    self.options = options
-    self.type = options[:type] ? options[:type].to_sym : :hidden
-    self.neurons = []
-    self.bias = nil
+    @options = options
+    @type = options[:type] ? options[:type].to_sym : :hidden
+    @neurons = []
+    @bias = nil
     build_neurons
   end
 
@@ -22,7 +22,7 @@ class Layer
       end
     when Array
       fail StandardError.new('Layer neurons are not all of Neuron class') if neurons_or_count.collect { |n| !n.is_a?(Neuron) }.any?
-      self.neurons = neurons_or_count
+      @neurons = neurons_or_count
     end
   end
 
@@ -57,7 +57,7 @@ class Layer
   def add_bias
     opts = { bias: true }
     opts.merge!(force_weight: options[:force_weight]) if options[:force_weight]
-    self.bias = Neuron.new(opts) if bias.nil?
+    @bias = Neuron.new(opts) if bias.nil?
   end
 
   def output
