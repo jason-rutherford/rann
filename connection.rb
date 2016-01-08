@@ -12,10 +12,6 @@ class Connection
     rand(-0.5..0.5)
   end
 
-  def weight_by_factor(f)
-    @weight *= f
-  end
-
   def to_s
     " connection to Neuron #{target.id} x #{weight.round(4)}"
   end
