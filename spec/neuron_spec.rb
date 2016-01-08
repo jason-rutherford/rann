@@ -1,12 +1,11 @@
 require 'spec_helper'
- 
-describe Neuron do
 
+describe Neuron do
   it 'takes no parameters and returns a Neuron' do
     n = Neuron.new
     expect(n).to be_an_instance_of Neuron
   end
- 
+
   it 'sets an output when attempted to activate' do
     n = Neuron.new
     output = n.activate(1)
@@ -16,7 +15,7 @@ describe Neuron do
   end
 
   it 'will default to and output 1 when it is a bias neuron' do
-    n = Neuron.new(is_bias: true)
+    n = Neuron.new(bias: true)
     expect(n.output).to eq 1
 
     output = n.activate(3)
@@ -28,10 +27,10 @@ describe Neuron do
     Neuron.reset_counter
     expect(Neuron.count).to eq 0
 
-    n1 = Neuron.new
+    Neuron.new
     expect(Neuron.count).to eq 1
 
-    n2 = Neuron.new
+    Neuron.new
     expect(Neuron.count).to eq 2
 
     Neuron.reset_counter
@@ -43,12 +42,12 @@ describe Neuron do
       n1 = Neuron.new
       n2 = Neuron.new
       n1.connect(n2)
-    
+
       expect(n1.outgoing.count).to eq 1
       expect(n1.incoming.count).to eq 0
       expect(n2.outgoing.count).to eq 0
       expect(n2.incoming.count).to eq 1
-      
+
       expect(n1.outgoing.first).to be_an_instance_of Connection
       expect(n2.incoming.first).to be_an_instance_of Connection
       expect(n1.outgoing.first).to eq n2.incoming.first
@@ -59,7 +58,7 @@ describe Neuron do
       n2 = Neuron.new
       n3 = Neuron.new
       n1.connect(n2, n3)
-    
+
       expect(n1.outgoing.count).to eq 2
       expect(n1.incoming.count).to eq 0
       expect(n2.outgoing.count).to eq 0
@@ -72,7 +71,7 @@ describe Neuron do
       expect(n3.incoming.first).to be_an_instance_of Connection
 
       expect(n1.outgoing.first).to eq n2.incoming.first
-      expect(n1.outgoing[1]).to    eq n3.incoming.first
+      expect(n1.outgoing[1]).to eq n3.incoming.first
     end
 
     it 'connects to a tree of neurons' do
@@ -84,7 +83,7 @@ describe Neuron do
       n1.connect(n2, n3, n4)
       n2.connect(n3, n4)
       n3.connect(n4)
-    
+
       expect(n1.outgoing.count).to eq 3
       expect(n1.incoming.count).to eq 0
       expect(n2.outgoing.count).to eq 2
@@ -125,7 +124,7 @@ describe Neuron do
       n1.output = 1.5
       n2.output = 1.5
 
-      output = n3.activate    
+      n3.activate
       expect(n3.input).to eq 3.0
     end
   end

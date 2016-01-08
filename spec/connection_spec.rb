@@ -1,11 +1,10 @@
 require 'spec_helper'
- 
-describe Connection do
 
+describe Connection do
   def default_setup
     @n1 = Neuron.new
     @n2 = Neuron.new
-    @c  = Connection.new(@n1, @n2)
+    @c = Connection.new(@n1, @n2)
   end
 
   it 'takes parameters and returns a Connection' do
@@ -29,5 +28,4 @@ describe Connection do
     @c.weight_by_factor(3)
     expect(@c.weight).to eq 1.5
   end
-
 end
