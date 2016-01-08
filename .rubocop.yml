@@ -1,0 +1,11 @@
+Metrics/LineLength:
+  Enabled: false
+Style/ClassVars:
+  Description: 'Avoid the use of class variables.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-class-vars'
+  Enabled: false  #true
+Style/SingleLineBlockParams:
+  Enabled: false  #true
+Metrics/MethodLength:
+  Max: 20
+  Enabled: true
