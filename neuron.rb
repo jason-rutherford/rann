@@ -1,7 +1,7 @@
 require './connection.rb'
 
 class Neuron
-  
+
   attr_accessor :id, :options, :input, :output, :weight, :outgoing, :incoming, :is_bias, :delta, :error, :learning_rate
   @@count = 0
   @@report_with = nil
@@ -19,8 +19,8 @@ class Neuron
 
     # train
     self.delta = nil
-    self.error = nil
     self.learning_rate = 0.3
+    self.error = 0
 
     self.options.merge! options
   end
@@ -53,13 +53,14 @@ class Neuron
   #
 
   def train(target_output=nil)
-    inputDerivative = activation_prime(self.input)
-    # if is_output or target_output not nil
-    if self.outgoing.empty?
-      self.error = target_output - self.output
-      self.delta = -self.error * inputDerivative
-    else
-      self.delta = outgoing.inject(0) { |sum, c| sum + (inputDerivative * c.weight * c.target.delta) }
+    if (!self.is_bias && !self.incoming.empty?)
+      # if is_output or target_output not nil
+      if self.outgoing.empty?
+        # this is derivative of error function, not simply difference in output
+        self.delta = self.output - target_output
+      else
+        self.delta = outgoing.inject(0) { |sum, c| sum + (c.weight * c.target.delta) }
+      end
     end
 
     # update weights
@@ -70,6 +71,17 @@ class Neuron
 
   end
 
+  def error_fn
+
+  end
+
+  def set_error
+
+  end
+
+  def accumulate
+    gradient = self.connections.incoming
+  end
    # prime
   def activation_prime(x)
     val = 1 / (1 + Math.exp(-x))
@@ -83,7 +95,7 @@ class Neuron
   # convenience method so you can set the weight
   def connect(*targets)
     targets.flatten.each do |target|
-      connection = Connection.new(self, target, self.options[:force_weight])
+      connection = Connection.new(self, target, options[:force_weight])
       self.outgoing << connection
       # for now we only handle connections in one direction
       target.incoming << connection
@@ -110,7 +122,7 @@ class Neuron
   end
 
   def to_s
-    s = "#{"Bias " if self.is_bias}Neuron #{id} (IN: #{self.input || '__'} => OUT: #{self.output || '__'})"
+    s = "#{"Bias " if is_bias}Neuron #{id} (IN: #{input || '__'} => OUT: #{output || '__'})"
     s += report_connections if @@report_with == :connections
     s
   end

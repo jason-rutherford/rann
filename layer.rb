@@ -42,7 +42,7 @@ class Layer
   def activate(values=nil)
     input_array = Array[values].flatten # force our splat arg to an Array
     outputs = []
-    neurons.each_with_index do |neuron, idx| 
+    neurons.each_with_index do |neuron, idx|
       outputs << neuron.activate(values && values[idx])
     end
 
@@ -51,6 +51,15 @@ class Layer
     end
 
     outputs
+  end
+
+  def train(target_outputs=nil)
+    target_outputs = Array[target_outputs].flatten # force our splat arg to an Array
+
+    neurons_and_bias.each_with_index do |neuron, idx|
+      neuron.train(target_outputs[idx])
+    end
+
   end
 
   def add_bias
