@@ -1,42 +1,41 @@
 require './connection.rb'
-
+# This class handles the neurons.  You can connect them together and train them.
 class Neuron
-
-  attr_accessor :id, :options, :input, :output, :weight, :outgoing, :incoming, :is_bias, :delta, :error, :learning_rate
+  attr_accessor :id, :options, :input, :output, :weight, :outgoing, :incoming, :bias, :delta, :error, :learning_rate
   @@count = 0
   @@report_with = nil
 
-  def initialize(options={})
-    self.options = {}
-    self.input  = options[:input] || 0
-    self.output = options[:output] || 0
-    self.is_bias = options[:is_bias] && self.output = 1 || false
-    self.id = @@count += 1
+  def initialize(options = {})
+    self.options       = {}
+    self.input         = options[:input] || 0
+    self.output        = options[:output] || 0
+    self.bias          = options[:bias] && self.output = 1 || false
+    self.id            = @@count += 1
 
     # connections
-    self.incoming = []
-    self.outgoing = []
+    self.incoming      = []
+    self.outgoing      = []
 
     # train
-    self.delta = nil
+    self.delta         = nil
     self.learning_rate = 0.3
-    self.error = 0
+    self.error         = 0
 
     self.options.merge! options
   end
 
-  def is_bias?
-    self.is_bias
+  def bias?
+    bias
   end
 
-  def activate(value=nil)
+  def activate(value = nil)
     self.input = value || sum_connections
-    if self.is_bias
+    if bias?
       self.output = 1
     else
-      self.output = activation_fn(self.input)
+      self.output = activation_fn(input)
     end
-    self.output
+    output
   end
 
   # sigmoid function basically exagerates the value between 0 and 1
@@ -45,44 +44,45 @@ class Neuron
   end
 
   def sum_connections
-    incoming.inject(0) {|sum,c| sum + (c.source.output * c.weight)}
+    incoming.inject(0) { |sum, c| sum + (c.source.output * c.weight) }
   end
 
   #
   # Train
   #
 
-  def train(target_output=nil)
-    if (!self.is_bias && !self.incoming.empty?)
-      # if is_output or target_output not nil
-      if self.outgoing.empty?
-        # this is derivative of error function, not simply difference in output
-        self.delta = self.output - target_output
-      else
-        self.delta = outgoing.inject(0) { |sum, c| sum + (c.weight * c.target.delta) }
-      end
-    end
+  def train(target_output = nil)
+    calculate_delta(target_output) if !bias && !incoming.empty?
+    update_connection_weights
+  end
 
-    # update weights
+  def calculate_delta(target_output)
+    if outgoing.empty?
+      self.delta = output - target_output
+    else
+      self.delta = outgoing.inject(0) { |sum, c| sum + (c.weight * c.target.delta) }
+    end
+  end
+
+  def update_connection_weights
     outgoing.each do |connection|
-      gradient = self.output * connection.target.delta
-      connection.weight -= gradient * self.learning_rate
+      gradient = output * connection.target.delta
+      connection.weight -= gradient * learning_rate
     end
-
   end
 
   def error_fn
-
   end
 
   def set_error
-
   end
 
   def accumulate
-    gradient = self.connections.incoming
+    # the gradient
+    connections.incoming
   end
-   # prime
+
+  # prime
   def activation_prime(x)
     val = 1 / (1 + Math.exp(-x))
     val * (1 - val)
@@ -92,22 +92,19 @@ class Neuron
   # End Train
   #
 
-  # convenience method so you can set the weight
   def connect(*targets)
     targets.flatten.each do |target|
       connection = Connection.new(self, target, options[:force_weight])
-      self.outgoing << connection
-      # for now we only handle connections in one direction
+      outgoing << connection
       target.incoming << connection
     end
   end
 
   # convenience method so you can set a weight
   def connect_one(target, weight)
-      connection = Connection.new(self, target, weight)
-      self.outgoing << connection
-      # for now we only handle connections in one direction
-      target.incoming << connection
+    connection = Connection.new(self, target, weight)
+    outgoing << connection
+    target.incoming << connection
   end
 
   def connections
@@ -122,7 +119,7 @@ class Neuron
   end
 
   def to_s
-    s = "#{"Bias " if is_bias}Neuron #{id} (IN: #{input || '__'} => OUT: #{output || '__'})"
+    s = "#{'Bias ' if bias}Neuron #{id} (IN: #{input || '__'} => OUT: #{output || '__'})"
     s += report_connections if @@report_with == :connections
     s
   end
@@ -132,7 +129,7 @@ class Neuron
   end
 
   # type can be nil for just neuron IO, or :connections to include outgoing connections
-  def self.report_with(type=nil)
+  def self.report_with(type = nil)
     @@report_with = type.to_sym
   end
 
