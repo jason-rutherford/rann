@@ -1,4 +1,4 @@
-
+# This class simply connects two objects together.  The connection has a source, target and weight.
 class Connection
   attr_accessor :source, :target, :weight
 

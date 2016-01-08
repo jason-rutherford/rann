@@ -8,7 +8,7 @@ def reload!
   $reloading = true
   no_reload = ['spec/', 'tmp/']
   ruby_files = Dir['**/*.rb']
-  ruby_files.reject { |f| f =~ /#{no_reload.join('|')}/}.each do |file|
+  ruby_files.reject { |f| f =~ /#{no_reload.join('|')}/ }.each do |file|
     load file
   end
   $reloading = false
