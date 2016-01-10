@@ -1,6 +1,2 @@
-require_relative '../connection'
-require_relative '../neuron'
-require_relative '../layer'
-require_relative '../network'
-
-require 'yaml'
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'rann'
