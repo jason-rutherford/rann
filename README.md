@@ -32,6 +32,19 @@ Rann::Trainer::DATA[:or_gate].each do |sample|
   puts "in: #{sample[:input]} out: #{output}"
 end
 ```
+will output
+```
+Training Data Set: OR Gate
+{:input=>[0, 0], :output=>[0]}
+{:input=>[0, 1], :output=>[1]}
+{:input=>[1, 0], :output=>[1]}
+{:input=>[1, 1], :output=>[1]}
+Testing Network:
+in: [0, 0] out: 0
+in: [0, 1] out: 1
+in: [1, 0] out: 1
+in: [1, 1] out: 1
+```
 
 ### Visualize the network
 
@@ -46,16 +59,16 @@ will print out
 ```text
 Network
  Input Layer 70272740914000
- Neuron 1 (IN: 0 => OUT: 0)
+  Neuron 1 (IN: 0 => OUT: 0)
   Bias Neuron 5 (IN: 0 => OUT: 1)
 
  Hidden Layer 70272740913620
- Neuron 2 (IN: 0 => OUT: 0)
+  Neuron 2 (IN: 0 => OUT: 0)
   Neuron 3 (IN: 0 => OUT: 0)
   Bias Neuron 6 (IN: 0 => OUT: 1)
 
  Output Layer 70272740913040
- Neuron 4 (IN: 0 => OUT: 0)
+  Neuron 4 (IN: 0 => OUT: 0)
  ```
  
 ### Providing Network Input
