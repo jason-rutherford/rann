@@ -2,49 +2,61 @@
 
 This is a WIP. This project demonstrates the basics of a neural network.  It features a network, layers, neurons and connections.
 
-## Example Usage:
+## Installation:
 
-This is a ruby project.
+This is a ruby gem but unpublished from rubygems.org at the moment.
 
 ```sh 
-$ irb -r ./app.rb
+git clone https://github.com/jason-rutherford/rann.git
 ```
-Then in irb:
+
+Then in your project Gemfile:
 ```ruby
-network = Network.new({size: [1,2,1]})
+gem 'rann', path: 'YOUR_PATH_TO_RANN'
 ```
-The size array defines number of neurons in each layer. 
-Input and output layers are first and last of array respectively.
+
+## Example Usage:
+```ruby
+require 'rann'
+
+net = Rann::Network.new(size: [2, 1])
+trainer = Rann::Trainer.new(net, Rann::Trainer::DATA[:or_gate])
+trainer.train({ epochs: 10000 })
+
+puts "Training Data Set: OR Gate"
+puts Rann::Trainer::DATA[:or_gate]
+
+puts "Testing Network:"
+Rann::Trainer::DATA[:or_gate].each do |sample|
+  output = net.activate(sample[:input]).first.round
+  puts "in: #{sample[:input]} out: #{output}"
+end
+```
 
 ### Visualize the network
 
+This can be useful while developing.
+
 ```ruby
-network = Network.new({size: [1,2,1]})
+network = Rann::Network.new({size: [1,2,1]})
 network.to_s
 ```
 will print out
 
 ```text
 Network
- Input Layer 70142336303140
-  Neuron 1 ()
-    0.0271683740583486 x Neuron 2
-    -0.33475448030016197 x Neuron 3
+ Input Layer 70272740914000
+ Neuron 1 (IN: 0 => OUT: 0)
+  Bias Neuron 5 (IN: 0 => OUT: 1)
 
- Hidden Layer 70142336294780
-  Neuron 2 ()
-    0.04857889234390422 x Neuron 4
-  Neuron 3 ()
-    -0.2474446077707908 x Neuron 4
+ Hidden Layer 70272740913620
+ Neuron 2 (IN: 0 => OUT: 0)
+  Neuron 3 (IN: 0 => OUT: 0)
+  Bias Neuron 6 (IN: 0 => OUT: 1)
 
- Output Layer 70142336294480
-  Neuron 4 ()
-  #<IO:0x007f96920ca5a0>
+ Output Layer 70272740913040
+ Neuron 4 (IN: 0 => OUT: 0)
  ```
- 
- Notice from the above that the network initializes neuron connections with random weights ie. 0.0271683740583486 x Neuron 2
- 
- Layers can be of type Input, Hidden and Output.  The layer object_id is included in the to_s output.
  
 ### Providing Network Input
 
